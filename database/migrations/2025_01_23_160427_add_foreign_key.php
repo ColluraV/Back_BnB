@@ -14,8 +14,8 @@ return new class extends Migration
         //many to many
         // connecting foreign keys on the bridge between apartment and service
         Schema::table('apartment_service', function (Blueprint $table) {
-            $table->foreignId('apartment_id')->constrained();
-            $table->foreignId('service_id')->constrained();
+            $table->foreignId('apartment_id')->nullable()->constrained();
+            $table->foreignId('service_id')->nullable()->constrained();
         });
 
         // connecting foreign keys on the bridge between apartment and sponsorship
@@ -30,12 +30,12 @@ return new class extends Migration
         // 1 to many
         // creating foreign key between apartment and message
         Schema::table('messages', function (Blueprint $table) {
-            $table->foreignId("apartment_id")->constrained();
+            $table->foreignId("apartment_id")->nullable()->constrained();
         });
 
         // creating foreign key between apartment and visits
         Schema::table('visits', function (Blueprint $table) {
-            $table->foreignId("apartment_id")->constrained();
+            $table->foreignId("apartment_id")->nullable()->constrained();
         });
 
         // creating foreign key between user and apartments
