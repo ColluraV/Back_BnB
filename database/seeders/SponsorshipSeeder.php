@@ -13,18 +13,21 @@ class SponsorshipSeeder extends Seeder
         //bronze
         [
             "name"=>"Bronze",
+            "description" => "Pacchetto base della durata di 24 ore",
             "price"=>2,99,
             "duration"=>24,
         ],
         //Silver
         [
             "name"=>"Silver",
+            "description" => "Pacchetto base della durata di 72 ore",
             "price"=>5,99,
             "duration"=>72,
         ],
         //Gold
         [
             "name"=>"Gold",
+            "description" => "Pacchetto base della durata di 144 ore",
             "price"=>9,99,
             "duration"=>144,
         ],
@@ -40,6 +43,7 @@ class SponsorshipSeeder extends Seeder
             foreach ($this->sponsor as $sponsor) {
                 $newSponsor = new Sponsorship();
                 $newSponsor->name = $sponsor["name"];
+                $newSponsor->description= $sponsor["description"];
                 $newSponsor->price = $sponsor["price"];
                 $newSponsor->duration = $sponsor["duration"];
                 $newSponsor->save();

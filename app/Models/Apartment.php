@@ -21,4 +21,27 @@ class Apartment extends Model
         'latitude',
         'longitude',
     ];
+
+    public function user() {
+        return $this->belongsTo(User::class);
+    }
+
+
+    public function service() {
+        return $this->belongsToMany(Service::class);
+    }
+
+    public function sponsorship() {
+        return $this->belongsToMany(Sponsorship::class);
+    }
+
+    public function message() {
+        return $this->hasMany(Message::class);
+    } 
+    
+    public function visit() {
+        return $this->hasMany(Visit::class);
+    }
+
+    
 }

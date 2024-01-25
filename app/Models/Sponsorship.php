@@ -12,7 +12,10 @@ class Sponsorship extends Model
     protected $fillable = [
         "name",
         "price",
+        "description",
         "duration",
     ];
-
+    public function apartment() {
+        return $this->belongsToMany(Apartment::class);
+    }
 }

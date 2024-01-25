@@ -16,9 +16,9 @@ class ApartmentServiceTableSeeder extends Seeder
     {
         $apartments = Apartment::all();
         $services = Service::all();
-
+    
         foreach ($apartments as $apartment) {
-            $apartment->services()->sync($services->random()->id);
+            $apartment->service()->attach($services->random(rand(1, 10))->pluck('id')->toArray());
         }
     }
 }

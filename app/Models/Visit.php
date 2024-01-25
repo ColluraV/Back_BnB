@@ -14,4 +14,7 @@ class Visit extends Model
     'date',
     ];
     
+    public function apartment(){
+        return $this->belongTo(Apartment::class);
+    }
 }
