@@ -5,9 +5,9 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Message>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
  */
-class MessageFactory extends Factory
+class ApartmentServiceFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,10 +17,7 @@ class MessageFactory extends Factory
     public function definition(): array
     {
         return [
-            
-            'name' => fake()->name(),
-            'email' => fake()->safeEmail(),
-            'text'=>fake()->paragraph(),
+            //
         ];
     }
 }

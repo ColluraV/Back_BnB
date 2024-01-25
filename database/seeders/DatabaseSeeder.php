@@ -19,6 +19,9 @@ class DatabaseSeeder extends Seeder
             ApartmentSeeder::class,
             SponsorshipSeeder::class,
             ServiceSeeder::class,
+            VisitSeeder::class,
+            MessageSeeder::class,
+            ApartmentServiceTableSeeder::class,
         ]);
 
         // \App\Models\User::factory(10)->create();
