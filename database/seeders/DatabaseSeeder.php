@@ -4,7 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+
 use App\Models\Sponsorship;
+use Database\Factories\ApartmentSponsorshipFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -22,7 +24,7 @@ class DatabaseSeeder extends Seeder
             VisitSeeder::class,
             MessageSeeder::class,
             ApartmentServiceTableSeeder::class,
-            ApartmentSponsorshipTableSeeder::class,
+            ApartmentSponsorshipSeeder::class,
         ]);
 
         // \App\Models\User::factory(10)->create();
