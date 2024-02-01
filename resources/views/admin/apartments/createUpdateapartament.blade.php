@@ -2,9 +2,9 @@
 @section('content')
     <h2>apartment creation and edit</h2>
     @if ($apartment !== 0)
-        {
+
         @dump($apartment)
-        }
+        
     @endif
 
     <form action="{{ route('admin.apartments.store') }}" method="POST" enctype="multipart/form-data" id="form">
@@ -85,13 +85,14 @@
         </div>
 
         {{-- visibility --}}
-        <div class="form-check form-switch form-check-reverse">
-            <input class="form-check-input" type="checkbox" id="visibility" name="visibility" value="{{ old('visibility', $apartment->visibility) }}">
-            <label class="form-check-label" for="flexSwitchCheckReverse">Reverse switch checkbox input</label>
-          </div>
 
-
-
+        <div>
+            <label for="" class="form-label">Vuoi che sia visibile?</label>
+            <select id="visibility" name="visibility" class="form-select">
+                <option @if ($apartment->visibility==1) @selected(true) @endif value="1" >Sì</option>
+                <option @if ($apartment->visibility==0) @selected(true) @endif value="0" >No</option>
+            </select>
+        </div>
 
         <input type="submit" value="Conferma">
     </form>
