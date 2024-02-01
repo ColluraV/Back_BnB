@@ -27,8 +27,8 @@
                 long: {{$apartment->longitude}}
             </li>
         </ul>
+        <a class="btn btn-primary mx-2" href="{{route('admin.apartments.edit', $apartment->id)}}">Modifica</a>
     </div>
-    
         
     @endforeach
 </div>

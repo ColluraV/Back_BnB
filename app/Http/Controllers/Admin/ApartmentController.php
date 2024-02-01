@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Apartment;
+use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ApartmentController extends Controller
@@ -14,15 +16,18 @@ class ApartmentController extends Controller
      */
     public function index()
     {
-        //Call for all Apartment on DB
 
-
-        $apartments = DB::table('apartments')
-        ->select('*')
-        ->get();
-
+        $user=Auth::user();                         //fetch all logged user info
+        $apartments= $user
+            ->apartments()
+            ->get();    //fetch all apartments linked to the user   
+        dump($user);
 
         return view('admin.apartments.index', compact('apartments'));
+        //Call for all Apartment on DB
+        //$apartments = DB::table('apartments')
+        //->select('*')
+        //->get();
     }
 
     /**
@@ -30,7 +35,8 @@ class ApartmentController extends Controller
      */
     public function create()
     {
-        return view('admin.apartments.createUpdateApartament');
+        $apartment=0;
+        return view('admin.apartments.createUpdateApartament',compact('apartment'));
     }
 
     /**
@@ -56,10 +62,10 @@ class ApartmentController extends Controller
     {
 
         // temporary we will use apartment 1, later to modify with the chosen one by the show page of the apartments
-        $apartmentId = DB::table('apartments')
+        $apartment = DB::table('apartments')
         ->find('1');
 
-        return view('admin.apartments.createUpdateApartament', compact('apartmentId'));
+        return view('admin.apartments.createUpdateApartament', compact('apartment'));
     }
 
     /**
