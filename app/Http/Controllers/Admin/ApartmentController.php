@@ -30,7 +30,7 @@ class ApartmentController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.apartments.createUpdateApartament');
     }
 
     /**
@@ -54,7 +54,12 @@ class ApartmentController extends Controller
      */
     public function edit(Apartment $apartment)
     {
-        //
+
+        // temporary we will use apartment 1, later to modify with the chosen one by the show page of the apartments
+        $apartmentId = DB::table('apartments')
+        ->find('1');
+
+        return view('admin.apartments.createUpdateApartament', compact('apartmentId'));
     }
 
     /**
