@@ -1,10 +1,9 @@
 @extends('layouts.app')
 @section('content')
+
     <h2>apartment creation and edit</h2>
     @if ($apartment !== 0)
-
         @dump($apartment)
-        
     @endif
 
     <form action="{{ route('admin.apartments.store') }}" method="POST" enctype="multipart/form-data" id="form">
@@ -89,11 +88,63 @@
         <div>
             <label for="" class="form-label">Vuoi che sia visibile?</label>
             <select id="visibility" name="visibility" class="form-select">
-                <option @if ($apartment->visibility==1) @selected(true) @endif value="1" >Sì</option>
-                <option @if ($apartment->visibility==0) @selected(true) @endif value="0" >No</option>
+                <option @if ($apartment->visibility == 1) @selected(true) @endif value="1">Sì</option>
+                <option @if ($apartment->visibility == 0) @selected(true) @endif value="0">No</option>
             </select>
         </div>
 
         <input type="submit" value="Conferma">
     </form>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/acios.min.js"></script>
+    <script>
+        const adressDOMElement = document.getElementById('address');
+        const latitudeDOMElement = document.getElementById('latitude');
+        const longitudeDOMElement = document.getElementById('longitude');
+        const locationsDOMElement = document.getElementById('locations');
+        let timer;
+
+        address.addEventListener('keyup', (event) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                callApi();
+            }, 500);
+        });
+
+        function callApi() {
+            if (adressDOMElement.value.length >= 5) {
+                const params = new URLSearchParams({
+                    location: adress.value
+                });
+                const url = 'api/geodata?' + params.toString();
+                axios.get(url).then(response => {
+                    console.log(response.data);
+                    createLocationsList(response.data);
+                });
+            }
+        }
+
+        function createLocationsList(locations) {
+            locationsDOMElement.innerHTML = '';
+            locationsDOMElement.classList.remove('d-none');
+
+            locations.forEach(location => {
+                const listItemDOMElement = document.createeElement('li');
+                listItemDOMElement.classList.add('list-group-item');
+                listItemDOMElement.setAttribute('role', 'button');
+
+                listItemDOMElement.innerText = location.adress;
+
+                listItemDOMElement.addEventListener('click', () => {
+                    latitudeDOMElement.value = location.position.latitude;
+                    longitudeDOMElement.value = location.position.longitude;
+                    adressDOMElement.value = location.adress;
+                    locationsDOMElement.classList.add('d-none');
+                    locationsDOMElement.innerHTML = '';
+                });
+
+                locationsDOMElement.append(listItemDOMElement)
+            });
+
+        }
+    </script>
 @endsection

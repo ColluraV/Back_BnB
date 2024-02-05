@@ -1,13 +1,14 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-
+use resource\TomTom;
 use App\Http\Controllers\Controller;
 use App\Models\Apartment;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class ApartmentController extends Controller
 {
@@ -36,6 +37,9 @@ class ApartmentController extends Controller
     public function create()
     {
         $apartment=0;
+        $apartments=Apartment::all();
+        $services=Service::all();
+
         return view('admin.apartments.createUpdateApartament',compact('apartment'));
     }
 
@@ -45,6 +49,11 @@ class ApartmentController extends Controller
     public function store(Request $request)
     {
         //
+
+        $data=$request;
+        $api_key=env('api_key');
+
+        $response = Http::get("https://api.tomtom.com/search/2/geocode/{'adress'}.jsonkey'".$api_key);  
     }
 
     /**
