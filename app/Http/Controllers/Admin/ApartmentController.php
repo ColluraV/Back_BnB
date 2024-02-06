@@ -40,7 +40,7 @@ class ApartmentController extends Controller
         $apartments=Apartment::all();
         $services=Service::all();
 
-        return view('admin.apartments.createUpdateApartament',compact('apartment'));
+        return view('admin.apartments.createUpdateApartament',compact('apartment','services'));
     }
 
     /**
@@ -49,11 +49,34 @@ class ApartmentController extends Controller
     public function store(Request $request)
     {
         //
+        $data=$request->all();
 
-        $data=$request;
-        $api_key=env('api_key');
+        $newApartment=new Apartment();
+        $newApartment->title=$data['title'];
+        $newApartment->rooms_number=$data['rooms_number'];
+        $newApartment->beds_number=$data['beds_number'];
+        $newApartment->bath_number=$data['bath_number'];
+        $newApartment->dimensions=$data['dimensions'];
+        $newApartment->address=$data['address'];
+        $newApartment->images='123445678894';   //ATTENZIONE! PROVVISORI DA CAMBIARE    
+        $newApartment->latitude='12.8894';      //ATTENZIONE! PROVVISORI DA CAMBIARE
+        $newApartment->longitude='12.8894';     //ATTENZIONE! PROVVISORI DA CAMBIARE
 
-        $response = Http::get("https://api.tomtom.com/search/2/geocode/{'adress'}.jsonkey'".$api_key);  
+        $newApartment->visibility=$data['visibility'];
+
+       
+
+        if (key_exists("services", $data)){
+            $newApartment->services()->attach($data['services']);
+        }
+        $newApartment->save();
+        
+                
+        //$api_key=env('api_key');
+
+        //$response = Http::get("https://api.tomtom.com/search/2/geocode/{'adress'}.jsonkey'".$api_key);  
+        
+        return redirect()->route('admin.apartments.show', $newApartment->id);
     }
 
     /**
@@ -61,7 +84,9 @@ class ApartmentController extends Controller
      */
     public function show(Apartment $apartment)
     {
-        //
+
+        $apartment= Apartment::findOrFail($apartment->id);
+        return view ('admin.apartments.show', compact('apartment'));        
     }
 
     /**
@@ -70,9 +95,10 @@ class ApartmentController extends Controller
     public function edit(Apartment $apartment)
     {
 
-        // temporary we will use apartment 1, later to modify with the chosen one by the show page of the apartments
-        $apartment = DB::table('apartments')
-        ->find('1');
+        //picking the apartament on with a specific ID
+        $apartment = Apartment::where("id",$apartment->id)->firstOrFail();
+
+        
 
         return view('admin.apartments.createUpdateApartament', compact('apartment'));
     }
