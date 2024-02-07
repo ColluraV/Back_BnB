@@ -118,7 +118,7 @@
     </form>
    
     <script>
-        const adressDOMElement = document.getElementById('address');
+        const addressDOMElement = document.getElementById('address');
         const latitudeDOMElement = document.getElementById('latitude');
         const longitudeDOMElement = document.getElementById('longitude');
         const locationsDOMElement = document.getElementById('locations');
@@ -132,11 +132,12 @@
         });
 
         function callApi() {
-            if (adressDOMElement.value.length >= 5) {
+
+            if (addressDOMElement.value.length >= 5) {
                 const params = new URLSearchParams({
-                    location: adress.value
+                    location: address.value
                 });
-                const url = 'api/geodata?' + params.toString();
+                const url = 'https://api.tomtom.com/search/2/geocode/' + params.toString() + '.json?key=5gutmwtHJC2AhYubazTadhjN3k5aWAmz';
                 axios.get(url).then(response => {
                     console.log(response.data);
                     createLocationsList(response.data);
@@ -153,12 +154,12 @@
                 listItemDOMElement.classList.add('list-group-item');
                 listItemDOMElement.setAttribute('role', 'button');
 
-                listItemDOMElement.innerText = location.adress;
+                listItemDOMElement.innerText = location.address;
 
                 listItemDOMElement.addEventListener('click', () => {
                     latitudeDOMElement.value = location.position.latitude;
                     longitudeDOMElement.value = location.position.longitude;
-                    adressDOMElement.value = location.adress;
+                    addressDOMElement.value = location.address;
                     locationsDOMElement.classList.add('d-none');
                     locationsDOMElement.innerHTML = '';
                 });
