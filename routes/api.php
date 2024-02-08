@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\TomtomController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,7 +20,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::get('/geolocation', function () {
-    
-    return view('welcome');
-});
+Route::get('/address', [TomtomController::class, 'getGeoData'])->name('getAddress');
