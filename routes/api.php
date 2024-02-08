@@ -19,5 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
+// route to link to the tomtom controller
 Route::get('/address', [TomtomController::class, 'getGeoData'])->name('getAddress');
