@@ -12,19 +12,11 @@ class TomtomController extends Controller
     private $baseUrl = 'https://api.tomtom.com/search/2/geocode/';
     private $apiKey = '';
 
-    // teoricamente dovrebbe prendere il valore dal file env e darlo a $apiKey
-    public function _construct() {
-        $this -> apiKey = env('api_key');
-    }
-
-    // test per vedere se è connesso con le rotte api
-    public function test(Request $request) {
-        $response = $request -> input('location');
-        return response()->json($response);
-    }
 
     public function getGeoData(Request $request)
     {
+        // take the apikey from file env
+        $this -> apiKey = env('api_key');
 
         // take the input value and put it into the variable $location
         $location = $request -> input('location');
@@ -36,12 +28,6 @@ class TomtomController extends Controller
             "countrySet" => "it",
             "key" => $this->apiKey
         ]);
-
-        // test per vedere il link che costruisce
-        // $response = "$this->baseUrl/$location.json?key=$this->apiKey"; 
-
-        // return per i test
-        // return $response;
 
         // variable filled with the locations 'cleaned' from nnecessary data
         $preparedLocations = $this->prepareLocations($response->json('results'));
