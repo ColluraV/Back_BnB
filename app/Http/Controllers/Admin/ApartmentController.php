@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
-use resource\TomTom;
+
 use App\Http\Controllers\Controller;
 use App\Models\Apartment;
 use App\Models\Service;
@@ -51,6 +51,16 @@ class ApartmentController extends Controller
         //
         $data=$request->all();
 
+        $api_key=env('api_key');
+        $query=$data['address'];
+
+        $response = Http::get("https://api.tomtom.com/search/2/geocode/getaddress.json", [
+            'query' => $query,
+            'key' => $api_key,
+        ]);
+
+        $geocodingData = $response->json();
+
         $newApartment=new Apartment();
         $newApartment->title=$data['title'];
         $newApartment->rooms_number=$data['rooms_number'];
@@ -74,7 +84,7 @@ class ApartmentController extends Controller
                 
         //$api_key=env('api_key');
 
-        //$response = Http::get("https://api.tomtom.com/search/2/geocode/{'adress'}.jsonkey'".$api_key);  
+        //$response = Http::get("https://api.tomtom.com/search/2/geocode/{'address'}.jsonkey'".$api_key);  
         
         return redirect()->route('admin.apartments.show', $newApartment->id);
     }

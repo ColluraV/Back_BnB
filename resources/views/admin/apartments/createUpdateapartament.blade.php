@@ -80,13 +80,16 @@
             @if($apartment)
                  value="{{ old('address', $apartment->address) }}"
             @endif  >
+            <div class="position-relative" style="z-index: 999">
+                <ul id="address-suggestions" class="list-group position-absolute w-100 overflow-auto"
+                    style="max-height: 250px"></ul>
+            </div>
             @error('apartment_address')
                 <div class="alert mt-2 alert-danger">{{ $message }}</div>
             @enderror
         </div>
 
-        @dump($services);
-
+   
         {{-- images --}}
         <div class="mb-3">
             <label class="form-label">Immagine</label>
@@ -117,14 +120,16 @@
         <input type="submit" value="Conferma">
     </form>
    
+    <script type="module" src="{{ asset('js/tomtom-suggestions.js') }}"></script>
+    
     <script>
         const addressDOMElement = document.getElementById('address');
         const latitudeDOMElement = document.getElementById('latitude');
         const longitudeDOMElement = document.getElementById('longitude');
         const locationsDOMElement = document.getElementById('locations');
-        let timer;
+         /*let timer;
 
-        address.addEventListener('keyup', (event) => {
+         address.addEventListener('keyup', (event) => {
             clearTimeout(timer);
             timer = setTimeout(() => {
                 callApi();
@@ -138,14 +143,17 @@
                     location: address.value
                 });
                 const url = 'https://api.tomtom.com/search/2/geocode/' + params.toString() + '.json?key=5gutmwtHJC2AhYubazTadhjN3k5aWAmz';
-                axios.get(url).then(response => {
-                    console.log(response.data);
+                axios.get(url, {
+                     header: {
+                         'Content-Type': 'application/json'
+                     }}).then(response => {
+                    dd(response.data);
                     createLocationsList(response.data);
                 });
             }
         }
 
-        function createLocationsList(locations) {
+      function createLocationsList(locations) {
             locationsDOMElement.innerHTML = '';
             locationsDOMElement.classList.remove('d-none');
 
@@ -167,6 +175,6 @@
                 locationsDOMElement.append(listItemDOMElement)
             });
 
-        }
+        }*/
     </script>
 @endsection
