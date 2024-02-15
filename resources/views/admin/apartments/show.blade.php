@@ -1,5 +1,5 @@
 @extends("layouts.app")
-@dump($apartment)
+
 @section("content")
     <div class="container">
         <h3>{{ $apartment->title }}</h3>

@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+use Illuminate\Support\Env;
+\Dotenv\Dotenv::createImmutable(__DIR__)->load();
 
 use App\Http\Controllers\Controller;
 use App\Models\Apartment;
@@ -9,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class ApartmentController extends Controller
 {
@@ -49,17 +52,17 @@ class ApartmentController extends Controller
     public function store(Request $request)
     {
         //
+
         $data=$request->all();
-
-        $api_key=env('api_key');
+        $api_key=env('MIX_API_KEY');
         $query=$data['address'];
-
+        /* https://api.tomtom.com/search/2/search/${query}.json?key=${api_key} */
         $response = Http::get("https://api.tomtom.com/search/2/geocode/getaddress.json", [
             'query' => $query,
             'key' => $api_key,
         ]);
 
-        $geocodingData = $response->json();
+        $geoData = $response->json();
 
         $newApartment=new Apartment();
         $newApartment->title=$data['title'];
@@ -68,18 +71,17 @@ class ApartmentController extends Controller
         $newApartment->bath_number=$data['bath_number'];
         $newApartment->dimensions=$data['dimensions'];
         $newApartment->address=$data['address'];
-        $newApartment->images='123445678894';   //ATTENZIONE! PROVVISORI DA CAMBIARE    
-        $newApartment->latitude='12.8894';      //ATTENZIONE! PROVVISORI DA CAMBIARE
-        $newApartment->longitude='12.8894';     //ATTENZIONE! PROVVISORI DA CAMBIARE
+        $newApartment->images='123445678894';                                   //ATTENZIONE! DA CAMBIARE    
+        $newApartment->latitude=$geoData['results'][0]['position']['lat'];      //Catching coordinates from API reader
+        $newApartment->longitude=$geoData['results'][0]['position']['lon'];     //Catching coordinates from API reader
 
         $newApartment->visibility=$data['visibility'];
-
        
-
-        if (key_exists("services", $data)){
-            $newApartment->services()->attach($data['services']);
-        }
         $newApartment->save();
+        
+                if (key_exists("services", $data)){
+                    $newApartment->services()->attach($data['services']);
+                }
         
                 
         //$api_key=env('api_key');
@@ -96,6 +98,8 @@ class ApartmentController extends Controller
     {
 
         $apartment= Apartment::findOrFail($apartment->id);
+
+
         return view ('admin.apartments.show', compact('apartment'));        
     }
 
@@ -107,11 +111,18 @@ class ApartmentController extends Controller
 
         //picking the apartament on with a specific ID
         $apartment = Apartment::where("id",$apartment->id)->firstOrFail();
-
+        $services=Service::all();
+        $user=Auth::user(); 
         
+        if (Auth::user()->id == $apartment->user_id) {
 
-        return view('admin.apartments.createUpdateApartament', compact('apartment'));
-    }
+            return view('admin.apartments.createUpdateApartament', compact('apartment','services','user'));
+        }
+            else {
+                return abort(404); //se non sei loggato con ristorante corretto -> 404
+            }
+        }
+    
 
     /**
      * Update the specified resource in storage.

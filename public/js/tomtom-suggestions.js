@@ -18,7 +18,7 @@ document.querySelector('input[name="address"]').addEventListener('keyup', functi
 
 });
 
-// Funzione per ottenere i suggerimenti da TomTom
+// Fetch info from API TomTom
 function fetchTomTomSuggestions(query, field) {
   if (addressDOMElement.value.length >= 5){
 
