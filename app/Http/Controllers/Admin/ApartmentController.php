@@ -114,12 +114,12 @@ class ApartmentController extends Controller
         $services=Service::all();
         $user=Auth::user(); 
         
-        if (Auth::user()->id == $apartment->user_id) {
+        if (Auth::user()->id == $apartment->user_id) { //picking user_id and authenticated user_id  
 
             return view('admin.apartments.createUpdateApartament', compact('apartment','services','user'));
         }
             else {
-                return abort(404); //se non sei loggato con ristorante corretto -> 404
+                return abort(404); //error if logged with different user_id -> 404
             }
         }
     

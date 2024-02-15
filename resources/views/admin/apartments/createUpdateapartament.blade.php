@@ -113,36 +113,5 @@
 
     <script>
         const addressDOMElement = document.getElementById('address');
-        const latitudeDOMElement = document.getElementById('latitude');
-        const longitudeDOMElement = document.getElementById('longitude');
-        const locationsDOMElement = document.getElementById('locations');
-        /*let timer;
-
-             address.addEventListener('keyup', (event) => {
-                clearTimeout(timer);
-                timer = setTimeout(() => {
-                    callApi();
-                }, 500);
-            });
-
-            function callApi() {
-
-                if (addressDOMElement.value.length >= 5) {
-                    const params = new URLSearchParams({
-                        location: address.value
-                    });
-                    const url = 'https://api.tomtom.com/search/2/geocode/' + params.toString() + '.json?key=5gutmwtHJC2AhYubazTadhjN3k5aWAmz';
-                    axios.get(url, {
-                         header: {
-                             'Content-Type': 'application/json'
-                         }}).then(response => {
-                        dd(response.data);
-                        createLocationsList(response.data);
-                    });
-                }
-            }
-
-
-            }*/
     </script>
 @endsection
