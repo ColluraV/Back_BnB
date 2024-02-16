@@ -22,13 +22,13 @@ class ApartmentsStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required',
-            'rooms_number' => 'required',
-            'beds_number' => 'required',
-            'bath_number' => 'required',
-            'dimensions' => 'required',
+            'title' => 'required|string',
+            'rooms_number' => 'required|integer',
+            'beds_number' => 'required|integer',
+            'bath_number' => 'required|integer',
+            'dimensions' => 'required|integer',
             'address' => 'required',
-            'images' => 'required',
+            'images' => 'nullable|image',
             'visibility' => 'required',
             "services" => "required"
         ];

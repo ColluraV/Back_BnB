@@ -2,8 +2,7 @@
 @section('content')
     <h2>apartment creation and edit</h2>
     @if ($apartment !== 0)
-        @dump($apartment)
-        @dump($user)
+        @dump($apartment->images)
     @endif
 
     <form action="{{ route('admin.apartments.store') }}" method="POST" enctype="multipart/form-data" id="form">
@@ -81,8 +80,17 @@
         {{-- images --}}
         <div class="mb-3">
             <label class="form-label">Immagine</label>
-            <input type="file" accept="image/*" class="form-control @error('apartment_images') is-invalid @enderror"
-                name="apartment_images">
+
+            @if ($apartment && $apartment !== 0)
+            <div class="container">
+                <h5>immagine attuale</h5>
+                <img src="{{ asset('storage/' . $apartment->images) }}" alt="{{$apartment->images}}" style="max-width: 500px">
+                <input type="checkbox" class="form-check-input" name="images" id="{{ $apartment->images }}"
+                value="{{ $apartment->images}}" checked>
+            </div>
+            @endif
+            <input type="file" enctype="multipart/form-data" accept="image/*"
+                class="form-control @error('apartment_images') is-invalid @enderror" name="images">
             @error('apartment_images')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -91,10 +99,11 @@
         @foreach ($services as $service)
             <div class="form-check">
                 <input type="checkbox" class="form-check-input" name="services[]" id="type{{ $service->id }}"
-                    value="{{ $service->id }}" @if (in_array($service->id, $apartment->services->pluck('id')->toArray())) checked @endif>
+                    value="{{ $service->id }}" @if (isset($apartment->services) && in_array($service->id, $apartment->services->pluck('id')->toArray())) checked @endif>
                 <label class="form-check-label" for="type{{ $service->id }}">{{ $service->name }}</label>
             </div>
         @endforeach
+
 
         {{-- visibility --}}
 

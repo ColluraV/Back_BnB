@@ -5,6 +5,7 @@ use Illuminate\Support\Env;
 \Dotenv\Dotenv::createImmutable(__DIR__)->load();
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ApartmentsStoreRequest;
 use App\Models\Apartment;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ApartmentController extends Controller
 {
@@ -25,13 +27,9 @@ class ApartmentController extends Controller
         $apartments= $user
             ->apartments()
             ->get();    //fetch all apartments linked to the user   
-        dump($user);
 
         return view('admin.apartments.index', compact('apartments'));
-        //Call for all Apartment on DB
-        //$apartments = DB::table('apartments')
-        //->select('*')
-        //->get();
+
     }
 
     /**
@@ -39,54 +37,50 @@ class ApartmentController extends Controller
      */
     public function create()
     {
+        $user=Auth::user();
         $apartment=0;
         $apartments=Apartment::all();
         $services=Service::all();
 
-        return view('admin.apartments.createUpdateApartament',compact('apartment','services'));
+        return view('admin.apartments.create',compact('apartment','services'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ApartmentsStoreRequest $request)
     {
         //
 
-        $data=$request->all();
+        $data = $request->validated();
+
         $api_key=env('MIX_API_KEY');
         $query=$data['address'];
-        /* https://api.tomtom.com/search/2/search/${query}.json?key=${api_key} */
+        
+        //calling tomtom api 
         $response = Http::get("https://api.tomtom.com/search/2/geocode/getaddress.json", [
             'query' => $query,
             'key' => $api_key,
         ]);
-
         $geoData = $response->json();
 
-        $newApartment=new Apartment();
-        $newApartment->title=$data['title'];
-        $newApartment->rooms_number=$data['rooms_number'];
-        $newApartment->beds_number=$data['beds_number'];
-        $newApartment->bath_number=$data['bath_number'];
-        $newApartment->dimensions=$data['dimensions'];
-        $newApartment->address=$data['address'];
-        $newApartment->images='123445678894';                                   //ATTENZIONE! DA CAMBIARE    
-        $newApartment->latitude=$geoData['results'][0]['position']['lat'];      //Catching coordinates from API reader
-        $newApartment->longitude=$geoData['results'][0]['position']['lon'];     //Catching coordinates from API reader
-
-        $newApartment->visibility=$data['visibility'];
        
-        $newApartment->save();
+        
+        $data['latitude']=$geoData['results'][0]['position']['lat'];      //Catching coordinates from API reader
+        $data['longitude']=$geoData['results'][0]['position']['lon'];     //Catching coordinates from API reader
+        $data['user_id'] = Auth::user()->id;
+        if (isset($data['images'])){
+        $data['images']=Storage::put("images", $data["images"]);
+        }
+
+        $newApartment=Apartment::create($data); //fill e save
+       
         
                 if (key_exists("services", $data)){
                     $newApartment->services()->attach($data['services']);
                 }
         
-                
-        //$api_key=env('api_key');
 
-        //$response = Http::get("https://api.tomtom.com/search/2/geocode/{'address'}.jsonkey'".$api_key);  
         
         return redirect()->route('admin.apartments.show', $newApartment->id);
     }
@@ -112,11 +106,9 @@ class ApartmentController extends Controller
         //picking the apartament on with a specific ID
         $apartment = Apartment::where("id",$apartment->id)->firstOrFail();
         $services=Service::all();
-        $user=Auth::user(); 
-        
+         
         if (Auth::user()->id == $apartment->user_id) { //picking user_id and authenticated user_id  
-
-            return view('admin.apartments.createUpdateApartament', compact('apartment','services','user'));
+            return view('admin.apartments.edit', compact('apartment','services',));
         }
             else {
                 return abort(404); //error if logged with different user_id -> 404
@@ -127,10 +119,30 @@ class ApartmentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Apartment $apartment)
+    public function update(ApartmentsStoreRequest $request, Apartment $apartment)
     {
-        //
+        $data=$request->validated();
+        $apartment = Apartment::where("id",$apartment->id)->firstOrFail();
+        if(isset($data['images'])){
+            if ($apartment->images){
+                Storage::delete($apartment->images);
+            }
+            $newImg=Storage::put("images", $data["images"]);
+            $data['images']=$newImg;
+        }
+        $data["services"] = $request->input('services', []);
+        // Manually assign the services array
+        // -> detaches the services not present in the new array
+        // -> attaches services not present in the old array
+        $apartment->services()->sync($data["services"]); // accesses the relationship and invokes the sync method
+    
+        $apartment->update($data); // Update item data
+        return redirect()->route('admin.apartments.show', compact('apartment'));
+
+
     }
+    
+    
 
     /**
      * Remove the specified resource from storage.

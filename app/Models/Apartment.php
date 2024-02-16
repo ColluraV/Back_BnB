@@ -20,6 +20,7 @@ class Apartment extends Model
         'visibility',
         'latitude',
         'longitude',
+        'user_id',
     ];
 
     public function user() {

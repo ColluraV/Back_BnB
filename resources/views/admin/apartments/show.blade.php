@@ -3,7 +3,7 @@
 @section("content")
     <div class="container">
         <h3>{{ $apartment->title }}</h3>
-        <img src="{{ asset('storage/' . $apartment->images) }}" alt="">
+        <img src="{{ asset('storage/' . $apartment->images) }}" alt="{{$apartment->images}}" style="max-width: 500px">
         <p>Prezzo: {{ $apartment->price }} €/notte</p>
         <p>Numero stanze: {{ $apartment->rooms_number }}</p>
         <p>Numero bagni: {{ $apartment->bath_number }}</p>
