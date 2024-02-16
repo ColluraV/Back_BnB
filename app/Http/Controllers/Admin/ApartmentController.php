@@ -150,5 +150,15 @@ class ApartmentController extends Controller
     public function destroy(Apartment $apartment)
     {
         //
+        $apartment = Apartment::where("id",$apartment->id)->firstOrFail();
+
+        if($apartment->images){
+            Storage::delete($apartment->images);
+        }
+        $apartment->services()->detach();
+        $apartment->sponsorships()->detach();
+        $apartment->delete();
+
+        return redirect()->route("admin.apartments.index");
     }
 }
