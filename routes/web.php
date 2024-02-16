@@ -43,6 +43,11 @@ Route::middleware('auth')
         Route::resource("apartments", ApartmentController::class);
         Route::get("messages", [MessageController::class, "index"])->name("messages");
         Route::get("visits/{id}", [VisitController::class, "show"])->name("visits.show");
+
+        //
+        //delete is not working
+        //
+        Route::delete("/messages/{id}", [MessageController::class, "destroy"])->name("mesage.destroy");
     });
 
 
