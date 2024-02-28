@@ -47,11 +47,11 @@ Route::middleware('auth')
     //Route::delete("messages/{id}", [MessageController::class, 'destroy'])->name('messages.destroy');
 });
 
-//---------Messages Routes----------//
-//Route::get('/message/create',function(){
-//    return view('admin.messages.create');
-//});
-//Route::post("/messages", [MessageController::class, "store"])->name("message.store");
+//---------Messages create Routes----------//
+Route::get('/message/create',function(){
+    return view('admin.messages.create');
+});
+//Route::post("/message", [MessageController::class, "store"])->name("message.store");
 
 
 require __DIR__.'/auth.php';

@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Apartment;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\MessagesStoreRequest;
 
 
 class MessageController extends Controller
@@ -30,9 +30,13 @@ class MessageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(MessagesStoreRequest $request)
     {
         //
+        $data = $request->validated();
+        $data['apartment_id']= 4; // * * * * * * * * * * * CHANGE THIS VALUE WITH apartment_id FETCHING THE FRONTEND ITEM' apartment_id* * * * * * * * * // 
+        $newMessage=Message::create($data);
+
     }
 
     /**
